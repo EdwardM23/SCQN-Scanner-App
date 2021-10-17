@@ -4,3 +4,5 @@ This application is a scanner application that uses the HMS Scan Kit technology.
 You can read more about our app here https://medium.com/@scrith.edward23/scqn-hms-scanner-app-a2fcf79dfe1b
 
 This application can also be accessed through the Huawei AppGallery https://appgallery.huawei.com/#/app/C104445453
+
+Made by Edo, Alex, and Oniel
