@@ -9,13 +9,22 @@
     android:paddingVertical="10dp">
 
     <TextView
-        android:id="@+id/text"
+        android:id="@+id/txtScanResult"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Google Chrome"
+        android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/txtScanTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="12dp"
+        app:layout_constraintStart_toStartOf="@+id/txtScanResult"
+        app:layout_constraintTop_toBottomOf="@+id/txtScanResult" />
 
     <ImageButton
         android:id="@+id/btnCopy"

@@ -8,38 +8,43 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class History {
+    private int id;
     private String dateTime;
-    private HmsScan text;
-    ArrayList<History> historyList = new ArrayList<>();
+    private String result;
+    private int id_counter = 1;
+    private SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
 
-    public History(HmsScan text){
-        this.text = text;
-        this.dateTime = getDateTime();
+    public History(String result){
+        this.id = id_counter++;
+        this.result = result;
+        this.dateTime = sdf.format(new Date());
     }
 
-    private String getTime() {
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-        Date date = new Date();
-        return dateFormat.format(date);
+    public History(){
+
     }
 
-    public ArrayList<History> getHistoryList(){
-        return historyList;
-    }
-
-    public void setDateTime(String dateTime) {
-        this.dateTime = dateTime;
-    }
-
-    public HmsScan getText() {
-        return text;
+    public String getResult() {
+        return result;
     }
 
     public String getDateTime() {
         return dateTime;
     }
 
-    public void setText(HmsScan text) {
-        this.text = text;
+    public void setDateTime(String dateTime) {
+        this.dateTime = dateTime;
+    }
+
+    public void setResult(String result) {
+        this.result = result;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

@@ -35,15 +35,15 @@ import androidx.appcompat.app.AppCompatDelegate;
 public class MainActivity extends AppCompatActivity {
     private final String TAG = MainActivity.class.getSimpleName();
     private final int PERMISSIONS_LENGTH = 2;
-    Button btnOpenInBrowser, btnCopyLink;
-    ImageButton flash_button, btnHistory;
+    private Button btnOpenInBrowser, btnCopyLink, btnScanHistory;
+    private ImageButton flash_button;
     private final int CAMERA_REQUEST_CODE = 2;
     private boolean flashOn = false, scanPaused = false;
     private FrameLayout frameLayout;
     private RemoteView remoteView;
-    private TextView TVScanResult;
-    TextView txtScanAgain;
-    ImageView imgReset;
+    private TextView TVScanResult, txtScanAgain;
+    private ImageView imgReset;
+    private DatabaseHandler db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,12 +54,10 @@ public class MainActivity extends AppCompatActivity {
 
         // AD BANNER
         // Obtain BannerView.
-        BannerView bannerView = findViewById(R.id.hw_banner_view);
-        // Set the refresh interval to 30 seconds.
-        bannerView.setBannerRefresh(20);
-        // Create an ad request to load an ad.
-        AdParam adParam = new AdParam.Builder().build();
-        bannerView.loadAd(adParam);
+//        BannerView bannerView = findViewById(R.id.hw_banner_view);
+//        bannerView.setBannerRefresh(20);
+//        AdParam adParam = new AdParam.Builder().build();
+//        bannerView.loadAd(adParam);
 
         txtScanAgain = findViewById(R.id.txtScanAgain);
         imgReset = findViewById(R.id.imgReset);
@@ -68,8 +66,14 @@ public class MainActivity extends AppCompatActivity {
         btnOpenInBrowser = findViewById(R.id.btnOpenInBrowser);
         btnCopyLink = findViewById(R.id.btnCopy);
         TVScanResult = findViewById(R.id.txtScanResult);
-//        btnHistory = findViewById(R.id.btnHistory);
+        btnScanHistory = findViewById(R.id.btnScanHistory);
+        db = new DatabaseHandler(this);
         String[] scanResult = {null};
+
+        db.clearScanHistoryTable();
+        db.addScanHistory(new History("Scan Test 1"));
+        db.addScanHistory(new History("Scan Test 2"));
+        db.addScanHistory(new History("Scan Test 3"));
 
         // SCANNER
         int mScreenWidth, mScreenHeight;
@@ -114,6 +118,7 @@ public class MainActivity extends AppCompatActivity {
                 parseResult(result[0]);
                 remoteView.pauseContinuouslyScan();
                 remoteView.setAlpha((float) 0.3);
+                db.addScanHistory(new History(strScanResult));
             }
         });
 
@@ -160,6 +165,14 @@ public class MainActivity extends AppCompatActivity {
                 toast.show();
                 ClipData clip = ClipData.newPlainText("copy", url);
                 clipboard.setPrimaryClip(clip);
+            }
+        });
+
+        btnScanHistory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent history = new Intent(MainActivity.this, HistoryPage.class);
+                startActivity(history);
             }
         });
     }
@@ -247,7 +260,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void saveHistory(HmsScan text){
-        History history = new History(text);
+//        History history = new History(text);
     }
 
     // Use the onRequestPermissionsResult function to receive the permission verification result.

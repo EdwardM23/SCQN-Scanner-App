@@ -11,15 +11,21 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-public abstract class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHolder> {
+public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHolder> {
         public class ViewHolder extends RecyclerView.ViewHolder {
-            public TextView text;
+            public TextView scanResult;
+            public TextView scanTime;
             public ImageButton btnCopyLink;
             public ViewHolder(View itemView) {
                 super(itemView);
 
-                text = (TextView) itemView.findViewById(R.id.text);
+                scanResult = (TextView) itemView.findViewById(R.id.txtScanResult);
+                scanTime = itemView.findViewById(R.id.txtScanTime);
                 btnCopyLink = itemView.findViewById(R.id.btnCopy);
+            }
+            public void setData(String res, String time) {
+                scanResult.setText(res);
+                scanTime.setText(time);
             }
         }
 
@@ -34,7 +40,7 @@ public abstract class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter
         LayoutInflater inflater = LayoutInflater.from(context);
 
         // Inflate the custom layout
-        View contactView = inflater.inflate(R.layout.history_list, parent, false);
+        View contactView = inflater.inflate(R.layout.history_adapter, parent, false);
 
         // Return a new holder instance
         ViewHolder viewHolder = new ViewHolder(contactView);
@@ -48,9 +54,7 @@ public abstract class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter
         History history = historyList.get(position);
 
         // Set item views based on your views and data model
-        TextView textView = holder.text;
-        textView.setText((CharSequence) history.getText());
-        ImageButton btnCopyLink = holder.btnCopyLink;
+        holder.setData(history.getResult(), history.getDateTime());
     }
 
     // Returns the total count of items in the list
