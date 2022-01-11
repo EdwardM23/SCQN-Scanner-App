@@ -4,11 +4,8 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.InstrumentationInfo;
 import android.content.pm.PackageManager;
-import android.graphics.Camera;
 import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -19,10 +16,13 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.huawei.hms.ads.AdListener;
 import com.huawei.hms.ads.AdParam;
+import com.huawei.hms.ads.BannerAdSize;
 import com.huawei.hms.ads.HwAds;
 import com.huawei.hms.ads.banner.BannerView;
 import com.huawei.hms.hmsscankit.OnResultCallback;
@@ -52,16 +52,8 @@ public class MainActivity extends AppCompatActivity {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         HwAds.init(this);
 
-        // AD BANNER
-        // Obtain BannerView.
-//        BannerView bannerView = findViewById(R.id.hw_banner_view);
-//        bannerView.setBannerRefresh(20);
-//        AdParam adParam = new AdParam.Builder().build();
-//        bannerView.loadAd(adParam);
-
         txtScanAgain = findViewById(R.id.txtScanAgain);
         imgReset = findViewById(R.id.imgReset);
-
         flash_button = findViewById(R.id.btn_flash);
         btnOpenInBrowser = findViewById(R.id.btnOpenInBrowser);
         btnCopyLink = findViewById(R.id.btnCopy);
@@ -69,11 +61,15 @@ public class MainActivity extends AppCompatActivity {
         btnScanHistory = findViewById(R.id.btnScanHistory);
         db = new DatabaseHandler(this);
         String[] scanResult = {null};
+        BannerView bannerView = findViewById(R.id.hw_banner_view);
 
-        db.clearScanHistoryTable();
-        db.addScanHistory(new History("Scan Test 1"));
-        db.addScanHistory(new History("Scan Test 2"));
-        db.addScanHistory(new History("Scan Test 3"));
+        // AD BANNER
+        bannerView.setAdId("testw6vs28auh3");
+//        bannerView.setBannerAdSize(BannerAdSize.BANNER_SIZE_360_57);
+        bannerView.setBannerRefresh(60);
+        AdParam adParam = new AdParam.Builder().build();
+        bannerView.loadAd(adParam);
+        bannerView.setAdListener(adListener);
 
         // SCANNER
         int mScreenWidth, mScreenHeight;
@@ -282,31 +278,53 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        // Listen to the onStart method of the activity.
         remoteView.onStart();
     }
     @Override
     protected void onResume() {
         super.onResume();
-        // Listen to the onResume method of the activity.
         remoteView.onResume();
     }
     @Override
     protected void onPause() {
         super.onPause();
-        // Listen to the onPause method of the activity.
         remoteView.onPause();
     }
     @Override
     protected void onStop() {
         super.onStop();
-        // Listen to the onStop method of the activity.
         remoteView.onStop();
     }
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // Listen to the onDestroy method of the activity.
         remoteView.onDestroy();
     }
+
+    private AdListener adListener = new AdListener() {
+        @Override
+        public void onAdLoaded() {
+            // Called when an ad is loaded successfully.
+        }
+        @Override
+        public void onAdFailed(int errorCode) {
+            // Called when an ad fails to be loaded.
+        }
+        @Override
+        public void onAdOpened() {
+            // Called when an ad is opened.
+        }
+        @Override
+        public void onAdClicked() {
+            // Called when an ad is clicked.
+        }
+        @Override
+        public void onAdLeave() {
+            // Called when an ad leaves an app.
+        }
+        @Override
+        public void onAdClosed() {
+            // Called when an ad is closed.
+        }
+    };
 }
