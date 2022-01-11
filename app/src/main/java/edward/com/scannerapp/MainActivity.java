@@ -16,13 +16,11 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.huawei.hms.ads.AdListener;
 import com.huawei.hms.ads.AdParam;
-import com.huawei.hms.ads.BannerAdSize;
 import com.huawei.hms.ads.HwAds;
 import com.huawei.hms.ads.banner.BannerView;
 import com.huawei.hms.hmsscankit.OnResultCallback;
@@ -56,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         imgReset = findViewById(R.id.imgReset);
         flash_button = findViewById(R.id.btn_flash);
         btnOpenInBrowser = findViewById(R.id.btnOpenInBrowser);
-        btnCopyLink = findViewById(R.id.btnCopy);
+        btnCopyLink = findViewById(R.id.btnCopyLink);
         TVScanResult = findViewById(R.id.txtScanResult);
         btnScanHistory = findViewById(R.id.btnScanHistory);
         db = new DatabaseHandler(this);
@@ -117,8 +115,6 @@ public class MainActivity extends AppCompatActivity {
                 db.addScanHistory(new History(strScanResult));
             }
         });
-
-
 
         // FLASHLIGHT
         flash_button.setOnClickListener(new View.OnClickListener() {
@@ -253,10 +249,6 @@ public class MainActivity extends AppCompatActivity {
     private void resetButton(){
         btnOpenInBrowser.setVisibility(View.INVISIBLE);
         btnCopyLink.setVisibility(View.INVISIBLE);
-    }
-
-    private void saveHistory(HmsScan text){
-//        History history = new History(text);
     }
 
     // Use the onRequestPermissionsResult function to receive the permission verification result.

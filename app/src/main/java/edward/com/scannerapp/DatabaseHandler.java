@@ -95,5 +95,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("delete from " + TABLE_SCAN_HISTORY);
     }
 
+    public void deleteHistory(int id){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from " + TABLE_SCAN_HISTORY + " where " + KEY_ID + " = " + id);
+    }
 
 }

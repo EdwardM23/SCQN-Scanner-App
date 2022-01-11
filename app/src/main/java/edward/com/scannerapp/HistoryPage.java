@@ -9,10 +9,15 @@ import com.huawei.hms.ads.BannerAdSize;
 import com.huawei.hms.ads.HwAds;
 import com.huawei.hms.ads.banner.BannerView;
 import com.huawei.hms.ml.scan.HmsScan;
+
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -38,13 +43,34 @@ public class HistoryPage extends AppCompatActivity {
         historyList = db.getAllScanHistory();
 
         HistoryAdapter adapter = new HistoryAdapter(historyList);
+        adapter.setOnItemClickListener(new HistoryAdapter.onItemClickListener() {
+            @Override
+            public void onItemCopy(int position) {
+                String text = historyList.get(position).getResult();
+                ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                Toast toast = Toast.makeText(getApplicationContext(), "Copied to clipboard", Toast.LENGTH_SHORT);
+                toast.show();
+                ClipData clip = ClipData.newPlainText("copy", text);
+                clipboard.setPrimaryClip(clip);
+            }
+
+            @Override
+            public void onItemDelete(int position) {
+                int id = historyList.get(position).getId();
+                db.deleteHistory(position);
+
+                adapter.notifyItemRemoved(position);
+            }
+        });
+
+
         rvHistory.setAdapter(adapter);
         rvHistory.setLayoutManager(new LinearLayoutManager(this));
 
         //Set Huawei Ads Banner
         HwAds.init(this);
         bannerView.setAdId(("testw6vs28auh3"));
-        bannerView.setBannerAdSize(BannerAdSize.BANNER_SIZE_360_57);
+//        bannerView.setBannerAdSize(BannerAdSize.BANNER_SIZE_360_57);
         bannerView.setBannerRefresh(60);
         AdParam adParam = new AdParam.Builder().build();
         bannerView.loadAd(adParam);

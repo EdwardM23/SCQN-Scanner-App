@@ -12,16 +12,53 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHolder> {
+
+    private HistoryAdapter.onItemClickListener itemListener;
+
+    public interface onItemClickListener {
+        void onItemCopy(int position);
+        void onItemDelete(int position);
+    }
+
+    public void setOnItemClickListener(HistoryAdapter.onItemClickListener itemListener) {
+        this.itemListener = itemListener;
+    }
+
         public class ViewHolder extends RecyclerView.ViewHolder {
             public TextView scanResult;
             public TextView scanTime;
-            public ImageButton btnCopyLink;
+            public ImageButton btnCopyLink, btnDelete;
             public ViewHolder(View itemView) {
                 super(itemView);
 
                 scanResult = (TextView) itemView.findViewById(R.id.txtScanResult);
                 scanTime = itemView.findViewById(R.id.txtScanTime);
                 btnCopyLink = itemView.findViewById(R.id.btnCopy);
+                btnDelete = itemView.findViewById(R.id.btnDelete);
+
+                btnCopyLink.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (itemListener != null) {
+                            int itemPosition = getAdapterPosition();
+                            if (itemPosition != RecyclerView.NO_POSITION) {
+                                itemListener.onItemCopy(itemPosition);
+                            }
+                        }
+                    }
+                });
+
+                btnDelete.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (itemListener != null) {
+                            int itemPosition = getAdapterPosition();
+                            if (itemPosition != RecyclerView.NO_POSITION) {
+                                itemListener.onItemDelete(itemPosition);
+                            }
+                        }
+                    }
+                });
             }
             public void setData(String res, String time) {
                 scanResult.setText(res);
