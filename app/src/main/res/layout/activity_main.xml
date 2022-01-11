@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:hwads="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
@@ -24,8 +25,8 @@
 
     <ImageView
         android:id="@+id/imageView2"
-        android:layout_width="100dp"
-        android:layout_height="50dp"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
         android:layout_marginStart="20dp"
         android:src="@drawable/logo_full"
         app:layout_constraintBottom_toTopOf="@+id/frame_layout"
@@ -51,7 +52,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Tap to scan again"
-        android:fontFamily="@font/poppins_medium"
+        android:fontFamily="@font/ssp_semibold"
         android:visibility="invisible"
         android:textColor="@color/white"
         android:paddingVertical="5dp"
@@ -78,44 +79,41 @@
         android:id="@+id/btnCopy"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="14dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="40dp"
         android:background="@drawable/bg_button"
-        android:fontFamily="@font/poppins_medium"
+        android:fontFamily="@font/ssp_semibold"
         android:text="Copy"
+        android:textSize="14dp"
         android:visibility="invisible"
         app:icon="@drawable/copy"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/scrollView2"
-        app:layout_constraintVertical_bias="0.26" />
+        app:layout_constraintTop_toBottomOf="@+id/scrollView2" />
 
     <Button
         android:id="@+id/btnOpenInBrowser"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="40dp"
-        android:textSize="14dp"
+        android:layout_marginTop="16dp"
         android:background="@drawable/bg_button"
-        android:fontFamily="@font/poppins_medium"
+        android:fontFamily="@font/ssp_semibold"
         android:text="Open in Browser"
+        android:textSize="14dp"
         android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/scrollView2"
-        app:layout_constraintVertical_bias="0.26" />
+        app:layout_constraintTop_toBottomOf="@+id/scrollView2" />
 
     <ScrollView
         android:id="@+id/scrollView2"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:layout_margin="20dp"
+        android:layout_marginTop="16dp"
         android:background="@drawable/rounded_frame"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/frame_layout"
-        app:layout_constraintVertical_bias="0.066">
+        app:layout_constraintTop_toBottomOf="@+id/frame_layout">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -124,12 +122,12 @@
 
             <TextView
                 android:id="@+id/txtScanResult"
-                android:fontFamily="@font/poppins_medium"
-                android:padding="10dp"
-                android:textSize="14dp"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/black" />
+                android:layout_height="160px"
+                android:fontFamily="@font/ssp_regular"
+                android:padding="10dp"
+                android:textColor="@color/black"
+                android:textSize="14dp" />
         </LinearLayout>
     </ScrollView>
 
@@ -144,18 +142,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnOpenInBrowser" />
 
-    <!--    <RelativeLayout-->
-<!--        android:id="@+id/relativeLayout"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content">-->
-
-<!--        <com.huawei.hms.ads.banner.BannerView-->
-<!--            android:id="@+id/hw_banner_view"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_alignParentBottom="true"-->
-<!--            app:adId="testw6vs28auh3"-->
-<!--            app:bannerSize="BANNER_SIZE_360_50" />-->
-<!--    </RelativeLayout>-->
+    <com.huawei.hms.ads.banner.BannerView
+        android:id="@+id/hw_banner_view"
+        android:layout_width="match_parent"
+        android:layout_height="140px"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
