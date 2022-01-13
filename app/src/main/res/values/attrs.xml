@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="ddlArr_Type">
+        <item>QR Code</item>
+        <item>Date Matrix</item>
+        <item>PDF417</item>
+        <item>Aztec</item>
+        <item>Code 128</item>
+    </string-array>
+
+    <string-array name="ddlArr_ForeColor">
+        <item>Black</item>
+        <item>Blue</item>
+        <item>Gray</item>
+        <item>Green</item>
+        <item>Red</item>
+        <item>Yellow</item>
+    </string-array>
+
+    <string-array name="ddlArr_BgColor">
+        <item>White</item>
+        <item>Yellow</item>
+        <item>Red</item>
+        <item>Green</item>
+        <item>Gray</item>
+        <item>Blue</item>
+        <item>Black</item>
+    </string-array>
+
+</resources>

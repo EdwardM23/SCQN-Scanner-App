@@ -43,12 +43,23 @@ public class MainActivity extends AppCompatActivity {
     private ImageView imgReset;
     private DatabaseHandler db;
 
+    private Button btnTesting;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         HwAds.init(this);
+
+        btnTesting = findViewById(R.id.btnTesting);
+        btnTesting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent testing = new Intent(MainActivity.this, GenerateBarcodeActivity.class);
+                startActivity(testing);
+            }
+        });
 
         txtScanAgain = findViewById(R.id.txtScanAgain);
         imgReset = findViewById(R.id.imgReset);
