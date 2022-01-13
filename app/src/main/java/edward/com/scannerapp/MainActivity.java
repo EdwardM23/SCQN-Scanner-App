@@ -33,7 +33,6 @@ import androidx.appcompat.app.AppCompatDelegate;
 public class MainActivity extends AppCompatActivity {
     private final String TAG = MainActivity.class.getSimpleName();
     private final int PERMISSIONS_LENGTH = 2;
-    private Button btnOpenInBrowser, btnCopyLink, btnScanHistory;
     private ImageButton flash_button;
     private final int CAMERA_REQUEST_CODE = 2;
     private boolean flashOn = false, scanPaused = false;
@@ -50,51 +49,28 @@ public class MainActivity extends AppCompatActivity {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         HwAds.init(this);
 
-        txtScanAgain = findViewById(R.id.txtScanAgain);
-        imgReset = findViewById(R.id.imgReset);
         flash_button = findViewById(R.id.btn_flash);
-        btnOpenInBrowser = findViewById(R.id.btnOpenInBrowser);
-        btnCopyLink = findViewById(R.id.btnCopyLink);
-        TVScanResult = findViewById(R.id.txtScanResult);
-        btnScanHistory = findViewById(R.id.btnScanHistory);
         db = new DatabaseHandler(this);
         String[] scanResult = {null};
-        BannerView bannerView = findViewById(R.id.hw_banner_view);
-
-        // AD BANNER
-        bannerView.setAdId("testw6vs28auh3");
-//        bannerView.setBannerAdSize(BannerAdSize.BANNER_SIZE_360_57);
-        bannerView.setBannerRefresh(60);
-        AdParam adParam = new AdParam.Builder().build();
-        bannerView.loadAd(adParam);
-        bannerView.setAdListener(adListener);
 
         // SCANNER
         int mScreenWidth, mScreenHeight;
-        // Bind the camera preview layout.
         frameLayout = findViewById(R.id.frame_layout);
-        // Set the scanning area. Set the parameters as required.
         DisplayMetrics dm = getResources().getDisplayMetrics();
         float density = dm.density;
-//        Log.d(TAG, "Density = " + density);
         mScreenWidth = getResources().getDisplayMetrics().widthPixels;
         mScreenHeight = getResources().getDisplayMetrics().heightPixels;
-//        Log.d(TAG, "Width = " + mScreenHeight + " Height = " + mScreenWidth);
 
-        // Set the width and height of the barcode scanning box to 300 dp.
-        final int SCAN_FRAME_SIZE = 1000;
+        final int SCAN_FRAME_SIZE = 300;
         int scanFrameSize = (int) (SCAN_FRAME_SIZE * density);
         Rect rect = new Rect();
         rect.left = mScreenWidth / 2 - scanFrameSize / 2;
         rect.right = mScreenWidth / 2 + scanFrameSize / 2;
         rect.top = mScreenHeight / 2 - scanFrameSize / 2;
         rect.bottom = mScreenHeight / 2 + scanFrameSize / 2;
-        Log.d(TAG, "rect: " + rect.left + "_" + rect.right + "_" + rect.top + "_" + rect.bottom);
 
         // Initialize the remote view. Use setContext() to pass the context (mandatory), use setBoundingBox() to set the scanning area, and use setFormat() to set the barcode format. Then call the build() method to create the remote view. Set the non-consecutive scanning mode using the setContinuouslyScan method (optional).
         remoteView = new RemoteView.Builder().setContext(this).build();
-//        remoteView.setBackgroundResource(R.drawable.rounded_frame);
-        // Load the customized view to the frameLayout of the activity.
         remoteView.onCreate(savedInstanceState);
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
         frameLayout.addView(remoteView, params);
@@ -104,15 +80,19 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResult(HmsScan[] result) {
                 // Obtain the scanning result object HmsScan.
-                pauseScan();
                 disableFlash();
                 scanResult[0] = result[0].getOriginalValue();
                 String strScanResult = scanResult[0];
-                TVScanResult.setText(strScanResult);
-                parseResult(result[0]);
-                remoteView.pauseContinuouslyScan();
-                remoteView.setAlpha((float) 0.3);
+//                TVScanResult.setText(strScanResult);
+//                parseResult(result[0]);
+//                remoteView.pauseContinuouslyScan();
+//                remoteView.setAlpha((float) 0.3);
                 db.addScanHistory(new History(strScanResult));
+
+                Intent scanResultAct = new Intent(MainActivity.this, ScanResultActivity.class);
+                scanResultAct.putExtra("result", strScanResult);
+                startActivity(scanResultAct);
+//                Toast.makeText(getApplicationContext(), strScanResult, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -124,86 +104,11 @@ public class MainActivity extends AppCompatActivity {
                 changeFlashIcon();
             }
         });
-
-        // HISTORY
-//        btnHistory.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                GoToHistoryPage();
-//            }
-//        });
-
-        // OPEN IN BROWSER
-        btnOpenInBrowser.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String url = scanResult[0];
-                if (!url.startsWith("http://") && !url.startsWith("https://")) url = "http://" + url;
-//                Log.d(TAG, "URL = " + url);
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                startActivity(browserIntent);
-            }
-        });
-
-        // COPY LINK
-        btnCopyLink.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String url = scanResult[0];
-                if (!url.startsWith("http://") && !url.startsWith("https://")) url = "http://" + url;
-//                Log.d(TAG, "URL = " + url);
-                ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                Toast toast = Toast.makeText(getApplicationContext(), "Copied to clipboard", Toast.LENGTH_SHORT);
-                toast.show();
-                ClipData clip = ClipData.newPlainText("copy", url);
-                clipboard.setPrimaryClip(clip);
-            }
-        });
-
-        btnScanHistory.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent history = new Intent(MainActivity.this, HistoryPage.class);
-                startActivity(history);
-            }
-        });
     }
 
     private void disableFlash(){
         flash_button.setImageResource(R.drawable.flash_disable);
     }
-
-    private void pauseScan(){
-        remoteView.onStop();
-        txtScanAgain = findViewById(R.id.txtScanAgain);
-        imgReset = findViewById(R.id.imgReset);
-
-        txtScanAgain.setVisibility(View.VISIBLE);
-        imgReset.setVisibility(View.VISIBLE);
-        scanPaused = true;
-
-        if(scanPaused) {
-            imgReset.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    resetScan();
-                }
-            });
-        }
-    }
-
-    private void resetScan(){
-        remoteView.setAlpha(1);
-        TVScanResult.setText("");
-        resetButton();
-        remoteView.onStart();
-        txtScanAgain.setVisibility(View.INVISIBLE);
-        imgReset.setVisibility(View.INVISIBLE);
-        scanPaused = false;
-        enableFlash();
-        remoteView.resumeContinuouslyScan();
-    }
-
 
     private void changeFlashIcon() {
         if(!scanPaused){
@@ -224,11 +129,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void parseResult(HmsScan result) {
-        resetButton();
-
+//        resetButton();
+//
         if (result.getScanTypeForm() == HmsScan.URL_FORM){
-            btnOpenInBrowser.setVisibility(View.VISIBLE);
-            btnCopyLink.setVisibility(View.VISIBLE);
+//            btnOpenInBrowser.setVisibility(View.VISIBLE);
+//            btnCopyLink.setVisibility(View.VISIBLE);
         } else if (result.getScanTypeForm() ==  HmsScan.SMS_FORM) {
             // Parse the data into structured SMS data.
             HmsScan.SmsContent smsContent = result.getSmsContent();
@@ -242,13 +147,8 @@ public class MainActivity extends AppCompatActivity {
             int cipherMode = wifiConnectionInfo.getCipherMode();
         }
         else{
-            btnCopyLink.setVisibility(View.VISIBLE);
+//            btnCopyLink.setVisibility(View.VISIBLE);
         }
-    }
-
-    private void resetButton(){
-        btnOpenInBrowser.setVisibility(View.INVISIBLE);
-        btnCopyLink.setVisibility(View.INVISIBLE);
     }
 
     // Use the onRequestPermissionsResult function to receive the permission verification result.
@@ -292,31 +192,4 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         remoteView.onDestroy();
     }
-
-    private AdListener adListener = new AdListener() {
-        @Override
-        public void onAdLoaded() {
-            // Called when an ad is loaded successfully.
-        }
-        @Override
-        public void onAdFailed(int errorCode) {
-            // Called when an ad fails to be loaded.
-        }
-        @Override
-        public void onAdOpened() {
-            // Called when an ad is opened.
-        }
-        @Override
-        public void onAdClicked() {
-            // Called when an ad is clicked.
-        }
-        @Override
-        public void onAdLeave() {
-            // Called when an ad leaves an app.
-        }
-        @Override
-        public void onAdClosed() {
-            // Called when an ad is closed.
-        }
-    };
 }
