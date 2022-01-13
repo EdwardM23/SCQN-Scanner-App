@@ -42,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
     private ImageView imgReset;
     private DatabaseHandler db;
 
+    private Button btnTemporaryGenerate;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +54,16 @@ public class MainActivity extends AppCompatActivity {
         flash_button = findViewById(R.id.btn_flash);
         db = new DatabaseHandler(this);
         String[] scanResult = {null};
+
+        // TEMPORARY -> REMOVE THIS LATER
+        btnTemporaryGenerate = findViewById(R.id.btnTemporaryGenerate);
+        btnTemporaryGenerate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, GenerateBarcodeActivity.class);
+                startActivity(intent);
+            }
+        });
 
         // SCANNER
         int mScreenWidth, mScreenHeight;
