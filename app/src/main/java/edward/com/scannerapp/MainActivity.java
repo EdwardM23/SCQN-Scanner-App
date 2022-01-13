@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -19,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.navigation.NavigationView;
 import com.huawei.hms.ads.AdListener;
 import com.huawei.hms.ads.AdParam;
 import com.huawei.hms.ads.HwAds;
@@ -27,8 +29,11 @@ import com.huawei.hms.hmsscankit.OnResultCallback;
 import com.huawei.hms.hmsscankit.RemoteView;
 import com.huawei.hms.ml.scan.HmsScan;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 public class MainActivity extends AppCompatActivity {
     private final String TAG = MainActivity.class.getSimpleName();
@@ -42,28 +47,16 @@ public class MainActivity extends AppCompatActivity {
     private ImageView imgReset;
     private DatabaseHandler db;
 
-    private Button btnTemporaryGenerate;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.nav_activity_main);
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         HwAds.init(this);
 
         flash_button = findViewById(R.id.btn_flash);
         db = new DatabaseHandler(this);
         String[] scanResult = {null};
-
-        // TEMPORARY -> REMOVE THIS LATER
-        btnTemporaryGenerate = findViewById(R.id.btnTemporaryGenerate);
-        btnTemporaryGenerate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, GenerateBarcodeActivity.class);
-                startActivity(intent);
-            }
-        });
 
         // SCANNER
         int mScreenWidth, mScreenHeight;
@@ -114,6 +107,24 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 remoteView.switchLight();
                 changeFlashIcon();
+            }
+        });
+
+        NavigationView nav = findViewById(R.id.nav_view);
+        nav.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.btn_scanHistory:
+                        startActivity(new Intent(getApplicationContext(), HistoryPage.class));
+                        break;
+                    case R.id.btn_generateQRCode:
+                        startActivity(new Intent(getApplicationContext(), GenerateBarcodeActivity.class));
+                        break;
+                }
+                DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
+                drawerLayout.closeDrawer(GravityCompat.START);
+                return true;
             }
         });
     }

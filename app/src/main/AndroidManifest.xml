@@ -19,11 +19,15 @@
         android:theme="@style/Theme.ScannerApp"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".NavigationActivity"
+            android:exported="false"
+            android:label="@string/title_activity_navigation"
+            android:theme="@style/Theme.ScannerApp.NoActionBar" />
+        <activity
             android:name=".ScanResultActivity"
             android:exported="false" />
         <activity android:name=".HistoryPage" />
-        <activity
-            android:name=".GenerateBarcodeActivity" />
+        <activity android:name=".GenerateBarcodeActivity" />
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
