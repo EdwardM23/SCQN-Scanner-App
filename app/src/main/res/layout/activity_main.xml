@@ -19,141 +19,43 @@
         android:id="@+id/btn_flash"
         android:layout_width="48dp"
         android:layout_height="48dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
         android:background="@color/white"
         android:scaleType="centerInside"
         android:src="@drawable/flash_off"
-        app:layout_constraintBottom_toTopOf="@+id/frame_layout"
+        android:elevation="2dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.928"
-        app:layout_constraintStart_toEndOf="@+id/imageView2"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.34" />
-
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="80dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="20dp"
-        android:src="@drawable/logo_full"
-        app:layout_constraintBottom_toTopOf="@+id/frame_layout"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.377" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <FrameLayout
         android:id="@+id/frame_layout"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
-        android:background="@color/black"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.571"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.246">
-    </FrameLayout>
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/txtScanAgain"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Tap to scan again"
-        android:fontFamily="@font/ssp_semibold"
-        android:visibility="invisible"
-        android:textColor="@color/white"
-        android:paddingVertical="5dp"
-        android:paddingHorizontal="10dp"
-        android:background="@drawable/rounded_button"
-        app:layout_constraintBottom_toBottomOf="@+id/frame_layout"
-        app:layout_constraintEnd_toEndOf="@+id/frame_layout"
-        app:layout_constraintStart_toStartOf="@+id/frame_layout"
-        app:layout_constraintTop_toBottomOf="@+id/imgReset" />
-
-    <ImageView
-        android:id="@+id/imgReset"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:padding="10dp"
-        android:background="@drawable/reset_scan"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="@+id/frame_layout"
-        app:layout_constraintEnd_toEndOf="@+id/frame_layout"
-        app:layout_constraintStart_toStartOf="@+id/frame_layout"
-        app:layout_constraintTop_toTopOf="@+id/frame_layout" />
-
-    <Button
-        android:id="@+id/btnOpenInBrowser"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="40dp"
-        android:background="@drawable/bg_button"
-        android:fontFamily="@font/ssp_semibold"
-        android:text="Copy"
-        android:textSize="14dp"
-        android:visibility="invisible"
-        app:icon="@drawable/copy"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/scrollView2" />
-
-    <Button
-        android:id="@+id/btnCopyLink"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/bg_button"
-        android:fontFamily="@font/ssp_semibold"
-        android:text="Open in Browser"
-        android:textSize="14dp"
-        android:visibility="invisible"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/scrollView2" />
-
-    <ScrollView
-        android:id="@+id/scrollView2"
+    <RelativeLayout
+        android:elevation="2dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/rounded_frame"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/frame_layout">
+        android:layout_height="match_parent">
 
-        <LinearLayout
+        <ImageView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/txtScanResult"
-                android:layout_width="wrap_content"
-                android:layout_height="160px"
-                android:fontFamily="@font/ssp_regular"
-                android:padding="10dp"
-                android:textColor="@color/black"
-                android:textSize="14dp" />
-        </LinearLayout>
-    </ScrollView>
-
-    <Button
-        android:id="@+id/btnScanHistory"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:layout_marginTop="16dp"
-        android:text="Scan History"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnOpenInBrowser" />
-
-    <com.huawei.hms.ads.banner.BannerView
-        android:id="@+id/hw_banner_view"
-        android:layout_width="match_parent"
-        android:layout_height="140px"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        app:layout_constraintBottom_toBottomOf="parent" />
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:alpha="0.1"
+            android:background="#FF000000" />
+        <!-- Set the scanning box.-->
+        <ImageView
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/scanning_box" />
+    </RelativeLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
