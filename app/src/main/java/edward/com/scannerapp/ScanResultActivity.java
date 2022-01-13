@@ -6,11 +6,13 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,9 +22,10 @@ import com.huawei.hms.ads.banner.BannerView;
 
 public class ScanResultActivity extends AppCompatActivity {
 
-    private ImageButton btnCopy, btnOpenInBrowser;
+    private ImageButton btnCopy, btnOpenInBrowser, btnBack;
     private TextView txtResult;
     private Button btnHistory;
+    private ImageView imgScan;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +47,10 @@ public class ScanResultActivity extends AppCompatActivity {
         btnOpenInBrowser = findViewById(R.id.btnOpenInBrowser);
         txtResult = findViewById(R.id.txtResult);
         btnHistory = findViewById(R.id.btnHistory);
+        btnBack = findViewById(R.id.btnBack);
+
+        imgScan = findViewById(R.id.imgScan);
+        imgScan.setImageBitmap(MainActivity.getBitmap_transfer());
 
         String scanResult = getIntent().getStringExtra("result");
         txtResult.setText(scanResult);
@@ -79,6 +86,14 @@ public class ScanResultActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent history = new Intent(getApplicationContext(), HistoryPage.class);
                 startActivity(history);
+            }
+        });
+
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent home = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(home);
             }
         });
     }

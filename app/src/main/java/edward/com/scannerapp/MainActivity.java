@@ -5,6 +5,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
@@ -46,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView TVScanResult, txtScanAgain;
     private ImageView imgReset;
     private DatabaseHandler db;
+    private static Bitmap bitmap_transfer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         rect.bottom = mScreenHeight / 2 + scanFrameSize / 2;
 
         // Initialize the remote view. Use setContext() to pass the context (mandatory), use setBoundingBox() to set the scanning area, and use setFormat() to set the barcode format. Then call the build() method to create the remote view. Set the non-consecutive scanning mode using the setContinuouslyScan method (optional).
-        remoteView = new RemoteView.Builder().setContext(this).build();
+        remoteView = new RemoteView.Builder().setContext(this).enableReturnBitmap().build();
         remoteView.onCreate(savedInstanceState);
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
         frameLayout.addView(remoteView, params);
@@ -85,19 +87,19 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResult(HmsScan[] result) {
                 // Obtain the scanning result object HmsScan.
-                disableFlash();
+//                disableFlash();
+//                ImageView image = findViewById(R.id.img_preview);
+                Bitmap img = result[0].getOriginalBitmap();
+                setBitmap_transfer(img);
+//                image.setImageBitmap(img);
+
                 scanResult[0] = result[0].getOriginalValue();
                 String strScanResult = scanResult[0];
-//                TVScanResult.setText(strScanResult);
-//                parseResult(result[0]);
-//                remoteView.pauseContinuouslyScan();
-//                remoteView.setAlpha((float) 0.3);
                 db.addScanHistory(new History(strScanResult));
 
                 Intent scanResultAct = new Intent(MainActivity.this, ScanResultActivity.class);
                 scanResultAct.putExtra("result", strScanResult);
                 startActivity(scanResultAct);
-//                Toast.makeText(getApplicationContext(), strScanResult, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -214,5 +216,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         remoteView.onDestroy();
+    }
+
+    public static Bitmap getBitmap_transfer() {
+        return bitmap_transfer;
+    }
+
+    public static void setBitmap_transfer(Bitmap bitmap_transfer_param) {
+        bitmap_transfer = bitmap_transfer_param;
     }
 }
