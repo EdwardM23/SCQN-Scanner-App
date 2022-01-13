@@ -57,8 +57,8 @@ public class HistoryPage extends AppCompatActivity {
             @Override
             public void onItemDelete(int position) {
                 int id = historyList.get(position).getId();
-                db.deleteHistory(position);
-
+                db.deleteHistory(id);
+                historyList.remove(position);
                 adapter.notifyItemRemoved(position);
             }
         });
@@ -87,9 +87,8 @@ public class HistoryPage extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 db.clearScanHistoryTable();
-                overridePendingTransition(0, 0);
-                startActivity(getIntent());
-                overridePendingTransition(0, 0);
+                historyList.clear();
+                adapter.notifyDataSetChanged();
             }
         });
     }
