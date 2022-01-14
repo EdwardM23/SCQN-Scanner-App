@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     public static final String SCAN_RESULT = "SCAN_RESULT";
 
     // UI Controls
-    private ImageButton flash_button, btnScanFromFile;
+    private ImageButton flash_button, btnScanFromFile, btnMenu;
     private FrameLayout frameLayout;
     private RemoteView remoteView;
     private TextView TVScanResult, txtScanAgain;
@@ -70,6 +70,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         flash_button = findViewById(R.id.btn_flash);
         btnScanFromFile = findViewById(R.id.btnScanFromFile);
+        btnMenu = findViewById(R.id.btnMenu);
         db = new DatabaseHandler(this);
         String[] scanResult = {null};
 
@@ -140,6 +141,14 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
                 drawerLayout.closeDrawer(GravityCompat.START);
                 return true;
+            }
+        });
+
+        btnMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout_main);
+                drawerLayout.openDrawer(GravityCompat.START);
             }
         });
 
