@@ -155,25 +155,21 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         setScanFromFile();
     }
 
-    private void disableFlash(){
-        flash_button.setImageResource(R.drawable.flash_disable);
-    }
-
     private void changeFlashIcon() {
         if(!scanPaused){
             if(flashOn){
-                flash_button.setImageResource(R.drawable.flash_off);
+                flash_button.setImageResource(R.drawable.btn_flash_off);
                 flashOn = false;
             }
             else {
-                flash_button.setImageResource(R.drawable.flash_on);
+                flash_button.setImageResource(R.drawable.btn_flash_on);
                 flashOn = true;
             }
         }
     }
 
     private void enableFlash(){
-        flash_button.setImageResource(R.drawable.flash_off);
+        flash_button.setImageResource(R.drawable.btn_flash_off);
         flashOn = false;
     }
 

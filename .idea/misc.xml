@@ -8,10 +8,14 @@
         <entry key="..\:/Android Studio/ScannerApp3/app/src/main/res/drawable/bg_history.xml" value="0.75" />
         <entry key="..\:/Android Studio/ScannerApp3/app/src/main/res/drawable/btn_back.xml" value="0.35052083333333334" />
         <entry key="..\:/Android Studio/ScannerApp3/app/src/main/res/drawable/btn_clear_history.xml" value="0.35052083333333334" />
+        <entry key="..\:/Android Studio/ScannerApp3/app/src/main/res/drawable/btn_flash_off.xml" value="0.35052083333333334" />
+        <entry key="..\:/Android Studio/ScannerApp3/app/src/main/res/drawable/btn_flash_on.xml" value="0.35052083333333334" />
         <entry key="..\:/Android Studio/ScannerApp3/app/src/main/res/drawable/btn_menu.xml" value="0.35052083333333334" />
+        <entry key="..\:/Android Studio/ScannerApp3/app/src/main/res/drawable/circle_button.xml" value="0.35052083333333334" />
         <entry key="..\:/Android Studio/ScannerApp3/app/src/main/res/drawable/copy.xml" value="0.35052083333333334" />
         <entry key="..\:/Android Studio/ScannerApp3/app/src/main/res/drawable/history.xml" value="0.35052083333333334" />
         <entry key="..\:/Android Studio/ScannerApp3/app/src/main/res/drawable/ic_baseline_delete_forever_24.xml" value="0.1953125" />
+        <entry key="..\:/Android Studio/ScannerApp3/app/src/main/res/drawable/ic_baseline_flash_off_24.xml" value="0.35052083333333334" />
         <entry key="..\:/Android Studio/ScannerApp3/app/src/main/res/drawable/ic_menu_gallery.xml" value="0.1953125" />
         <entry key="..\:/Android Studio/ScannerApp3/app/src/main/res/drawable/rounded_button.xml" value="0.35052083333333334" />
         <entry key="..\:/Android Studio/ScannerApp3/app/src/main/res/drawable/scanning_box.xml" value="0.35052083333333334" />
