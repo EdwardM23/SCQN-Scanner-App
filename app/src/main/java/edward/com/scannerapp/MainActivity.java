@@ -1,19 +1,19 @@
 package edward.com.scannerapp;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.content.Context;
+
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -28,26 +28,38 @@ import com.huawei.hms.ads.HwAds;
 import com.huawei.hms.ads.banner.BannerView;
 import com.huawei.hms.hmsscankit.OnResultCallback;
 import com.huawei.hms.hmsscankit.RemoteView;
+import com.huawei.hms.hmsscankit.ScanUtil;
 import com.huawei.hms.ml.scan.HmsScan;
+import com.huawei.hms.ml.scan.HmsScanAnalyzerOptions;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
-public class MainActivity extends AppCompatActivity {
+import java.util.Objects;
+
+public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
+    // Constants
     private final String TAG = MainActivity.class.getSimpleName();
+    private final int REQUEST_CODE_FILE = 300;
     private final int PERMISSIONS_LENGTH = 2;
-    private ImageButton flash_button;
     private final int CAMERA_REQUEST_CODE = 2;
-    private boolean flashOn = false, scanPaused = false;
+    public static final String SCAN_RESULT = "SCAN_RESULT";
+
+    // UI Controls
+    private ImageButton flash_button, btnScanFromFile;
     private FrameLayout frameLayout;
     private RemoteView remoteView;
     private TextView TVScanResult, txtScanAgain;
     private ImageView imgReset;
+
+    // Variables, Objects
     private DatabaseHandler db;
     private static Bitmap bitmap_transfer;
+    private boolean flashOn = false, scanPaused = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
         HwAds.init(this);
 
         flash_button = findViewById(R.id.btn_flash);
+        btnScanFromFile = findViewById(R.id.btnScanFromFile);
         db = new DatabaseHandler(this);
         String[] scanResult = {null};
 
@@ -95,10 +108,10 @@ public class MainActivity extends AppCompatActivity {
 
                 scanResult[0] = result[0].getOriginalValue();
                 String strScanResult = scanResult[0];
-                db.addScanHistory(new History(strScanResult));
+                addScanHistory(strScanResult);
 
                 Intent scanResultAct = new Intent(MainActivity.this, ScanResultActivity.class);
-                scanResultAct.putExtra("result", strScanResult);
+                scanResultAct.putExtra(SCAN_RESULT, strScanResult);
                 startActivity(scanResultAct);
             }
         });
@@ -129,6 +142,8 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+
+        setScanFromFile();
     }
 
     private void disableFlash(){
@@ -190,6 +205,64 @@ public class MainActivity extends AppCompatActivity {
     public void GoToHistoryPage(){
         Intent intent = new Intent(this, HistoryPage.class);
         startActivity(intent);
+    }
+
+    private void setScanFromFile() {
+        btnScanFromFile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent pickIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                pickIntent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+                MainActivity.this.startActivityForResult(pickIntent, REQUEST_CODE_FILE);
+            }
+        });
+    }
+
+    // Get Image from File to the Activity
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode != RESULT_OK || data == null || requestCode != REQUEST_CODE_FILE) {
+            return;
+        }
+
+        try {
+            // Image-based scanning mode
+            decodeBitmap(MediaStore.Images.Media.getBitmap(this.getContentResolver(), data.getData()), HmsScan.ALL_SCAN_TYPE);
+        } catch (Exception e) {
+            Log.e(TAG, Objects.requireNonNull(e.getMessage()));
+        }
+    }
+
+    private void decodeBitmap(Bitmap bitmap, int scanType) {
+        HmsScan[] hmsScans = ScanUtil.decodeWithBitmap(MainActivity.this, bitmap, new HmsScanAnalyzerOptions.Creator().setHmsScanTypes(scanType).setPhotoMode(true).create());
+        if (hmsScans != null && hmsScans.length > 0 && hmsScans[0] != null && !TextUtils.isEmpty(hmsScans[0].getOriginalValue())) {
+            Parcelable[] obj = hmsScans;
+            if (obj != null && obj.length > 0) {
+                //Get one result.
+                if (obj.length == 1) {
+                    if (obj[0] != null && !TextUtils.isEmpty(((HmsScan) obj[0]).getOriginalValue())) {
+                        setBitmap_transfer(bitmap);
+                        String strScanResultFromFile = ((HmsScan) obj[0]).getOriginalValue();
+                        addScanHistory(strScanResultFromFile);
+
+                        Intent intent = new Intent(this, ScanResultActivity.class);
+                        intent.putExtra(SCAN_RESULT, strScanResultFromFile);
+                        startActivity(intent);
+                    }
+                } else {
+                    Toast.makeText(this, "Please only select one image!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+        else {
+            Toast.makeText(this, "Sorry! Image isn't a valid barcode!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void addScanHistory(String scanResult) {
+        db.addScanHistory(new History(scanResult));
     }
 
     @Override

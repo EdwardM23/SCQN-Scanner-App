@@ -52,7 +52,7 @@ public class ScanResultActivity extends AppCompatActivity {
         imgScan = findViewById(R.id.imgScan);
         imgScan.setImageBitmap(MainActivity.getBitmap_transfer());
 
-        String scanResult = getIntent().getStringExtra("result");
+        String scanResult = getIntent().getStringExtra(MainActivity.SCAN_RESULT);
         txtResult.setText(scanResult);
 
         showButtons(scanResult);

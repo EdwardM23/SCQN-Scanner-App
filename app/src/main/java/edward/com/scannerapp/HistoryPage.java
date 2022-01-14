@@ -87,8 +87,9 @@ public class HistoryPage extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 db.clearScanHistoryTable();
+                int size = historyList.size();
                 historyList.clear();
-                adapter.notifyDataSetChanged();
+                adapter.notifyItemRangeRemoved(0, size);
             }
         });
     }
