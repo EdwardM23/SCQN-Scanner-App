@@ -35,7 +35,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Objects;
 
-public class GenerateBarcodeActivity extends AppCompatActivity {
+public class GenerateBarcodeActivity extends AppCompatActivity implements HuaweiBannerAds {
 
     private static final String TAG = "GenerateBarcodeActivity" ;
     private static final int[] BARCODE_TYPES = {
@@ -106,12 +106,7 @@ public class GenerateBarcodeActivity extends AppCompatActivity {
         bannerAds = findViewById(R.id.huawei_banner);
 
         //Set Huawei Ads Banner
-        HwAds.init(this);
-        bannerAds.setAdId(("testw6vs28auh3"));
-        bannerAds.setBannerRefresh(60);
-        AdParam adParam = new AdParam.Builder().build();
-        bannerAds.loadAd(adParam);
-
+        setHuaweiBannerAds(bannerAds);
         setupListeners();
     }
 
@@ -275,5 +270,14 @@ public class GenerateBarcodeActivity extends AppCompatActivity {
                 Toast.makeText(this, "Permission DENIED", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    @Override
+    public void setHuaweiBannerAds(BannerView banner) {
+        HwAds.init(this);
+        banner.setAdId(("testw6vs28auh3"));
+        banner.setBannerRefresh(60);
+        AdParam adParam = new AdParam.Builder().build();
+        banner.loadAd(adParam);
     }
 }

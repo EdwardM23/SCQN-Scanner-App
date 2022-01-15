@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.provider.MediaStore;
@@ -22,10 +21,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
-import com.huawei.hms.ads.AdListener;
-import com.huawei.hms.ads.AdParam;
-import com.huawei.hms.ads.HwAds;
-import com.huawei.hms.ads.banner.BannerView;
 import com.huawei.hms.hmsscankit.OnResultCallback;
 import com.huawei.hms.hmsscankit.RemoteView;
 import com.huawei.hms.hmsscankit.ScanUtil;
@@ -40,6 +35,8 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import java.util.Objects;
+
+import edward.com.scannerapp.model.History;
 
 public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
     // Constants
@@ -66,7 +63,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.nav_activity_main);
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-        HwAds.init(this);
 
         flash_button = findViewById(R.id.btn_flash);
         btnScanFromFile = findViewById(R.id.btnScanFromFile);
@@ -136,6 +132,12 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                         break;
                     case R.id.btn_generateQRCode:
                         startActivity(new Intent(getApplicationContext(), GenerateBarcodeActivity.class));
+                        break;
+                    case R.id.btn_scanFromFile:
+                        scanFromFile();
+                        break;
+                    case R.id.btn_bookmark:
+                        startActivity(new Intent(getApplicationContext(), BookmarkActivity.class));
                         break;
                 }
                 DrawerLayout drawerLayout = findViewById(R.id.drawer_layout_main);
@@ -212,13 +214,17 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         startActivity(intent);
     }
 
+    public void scanFromFile() {
+        Intent pickIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        pickIntent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+        MainActivity.this.startActivityForResult(pickIntent, REQUEST_CODE_FILE);
+    }
+
     private void setScanFromFile() {
         btnScanFromFile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent pickIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                pickIntent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-                MainActivity.this.startActivityForResult(pickIntent, REQUEST_CODE_FILE);
+                scanFromFile();
             }
         });
     }
@@ -270,6 +276,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         db.addScanHistory(new History(scanResult));
     }
 
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -303,4 +310,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     public static void setBitmap_transfer(Bitmap bitmap_transfer_param) {
         bitmap_transfer = bitmap_transfer_param;
     }
+
+
 }

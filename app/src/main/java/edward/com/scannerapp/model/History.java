@@ -1,4 +1,4 @@
-package edward.com.scannerapp;
+package edward.com.scannerapp.model;
 
 import com.huawei.hms.ml.scan.HmsScan;
 

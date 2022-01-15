@@ -4,10 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.huawei.hms.ads.AdParam;
-import com.huawei.hms.ads.HwAds;
-import com.huawei.hms.ads.banner.BannerView;
-
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -17,34 +13,39 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.huawei.hms.ads.AdParam;
+import com.huawei.hms.ads.HwAds;
+import com.huawei.hms.ads.banner.BannerView;
+
 import java.util.ArrayList;
 
+import edward.com.scannerapp.model.Bookmark;
 import edward.com.scannerapp.model.History;
 
-public class HistoryPage extends AppCompatActivity implements HuaweiBannerAds {
+public class BookmarkActivity extends AppCompatActivity implements HuaweiBannerAds{
 
-    private ArrayList<History> historyList;
+    private ArrayList<Bookmark> bookmarkList;
     private DatabaseHandler db;
-    private ImageButton btnBack, btnClearHistory;
+    private ImageButton btnBack, btnClearBookmark;
     private BannerView bannerView;
-    private RecyclerView rvHistory;
+    private RecyclerView rvBookmark;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_history);
+        setContentView(R.layout.activity_bookmark);
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
         }
 
         bannerView = findViewById(R.id.huawei_banner);
-        rvHistory = findViewById(R.id.rvHistory);
+        rvBookmark = findViewById(R.id.rvBookmark);
         db = new DatabaseHandler(this);
-        btnBack = findViewById(R.id.btnBack);
-        btnClearHistory = findViewById(R.id.btnClearHistory);
-        historyList = db.getAllScanHistory();
+        btnBack = findViewById(R.id.btnBackBookmark);
+        btnClearBookmark = findViewById(R.id.btnClearBookmark);
+        bookmarkList = db.getAllScanBookmark();
 
-        setHistoryAdapter();
+        setBookmarkAdapter();
         setHuaweiBannerAds(bannerView);
     }
 
@@ -58,12 +59,12 @@ public class HistoryPage extends AppCompatActivity implements HuaweiBannerAds {
         banner.loadAd(adParam);
     }
 
-    public void setHistoryAdapter() {
-        HistoryAdapter adapter = new HistoryAdapter(historyList);
-        adapter.setOnItemClickListener(new HistoryAdapter.onItemClickListener() {
+    public void setBookmarkAdapter() {
+        BookmarkAdapter adapter = new BookmarkAdapter(bookmarkList);
+        adapter.setOnItemClickListener(new BookmarkAdapter.onItemClickListener() {
             @Override
             public void onItemCopy(int position) {
-                String text = historyList.get(position).getResult();
+                String text = bookmarkList.get(position).getResult();
                 ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
                 Toast toast = Toast.makeText(getApplicationContext(), "Copied to clipboard", Toast.LENGTH_SHORT);
                 toast.show();
@@ -73,33 +74,37 @@ public class HistoryPage extends AppCompatActivity implements HuaweiBannerAds {
 
             @Override
             public void onItemDelete(int position) {
-                int id = historyList.get(position).getId();
-                db.deleteHistory(id);
-                historyList.remove(position);
-                adapter.notifyItemRemoved(position);
+                int id = bookmarkList.get(position).getId();
+                Toast toast = Toast.makeText(getApplicationContext(), "NOT IMPLEMENTED YET", Toast.LENGTH_SHORT);
+                toast.show();
+//                db.deleteHistory(id);
+//                historyList.remove(position);
+//                adapter.notifyItemRemoved(position);
             }
         });
 
-
-        rvHistory.setAdapter(adapter);
-        rvHistory.setLayoutManager(new LinearLayoutManager(this));
+        rvBookmark.setAdapter(adapter);
+        rvBookmark.setLayoutManager(new LinearLayoutManager(this));
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent home = new Intent(HistoryPage.this, MainActivity.class);
+                Intent home = new Intent(BookmarkActivity.this, MainActivity.class);
                 startActivity(home);
             }
         });
 
-        btnClearHistory.setOnClickListener(new View.OnClickListener() {
+        btnClearBookmark.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 db.clearScanHistoryTable();
-                int size = historyList.size();
-                historyList.clear();
-                adapter.notifyItemRangeRemoved(0, size);
+                Toast toast = Toast.makeText(getApplicationContext(), "NOT IMPLEMENTED YET", Toast.LENGTH_SHORT);
+                toast.show();
+//                int size = historyList.size();
+//                historyList.clear();
+//                adapter.notifyItemRangeRemoved(0, size);
             }
         });
     }
+
 
 }

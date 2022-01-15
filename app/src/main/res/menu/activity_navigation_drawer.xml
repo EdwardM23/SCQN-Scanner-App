@@ -9,9 +9,18 @@
             android:icon="@drawable/history"
             android:title="Scan History" />
         <item
+            android:id="@+id/btn_bookmark"
+            android:icon="@drawable/btn_bookmark"
+            android:title="Bookmarks" />
+        <item
             android:id="@+id/btn_generateQRCode"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/btn_create"
             android:title="Generate QR Code" />
+
+        <item
+            android:id="@+id/btn_scanFromFile"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="Scan from File" />
 
     </group>
 </menu>

@@ -20,12 +20,13 @@ import com.huawei.hms.ads.AdListener;
 import com.huawei.hms.ads.AdParam;
 import com.huawei.hms.ads.banner.BannerView;
 
-public class ScanResultActivity extends AppCompatActivity {
+public class ScanResultActivity extends AppCompatActivity implements HuaweiBannerAds{
 
     private ImageButton btnCopy, btnOpenInBrowser, btnBack;
     private TextView txtResult;
     private Button btnHistory;
     private ImageView imgScan;
+    private BannerView bannerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,14 +36,7 @@ public class ScanResultActivity extends AppCompatActivity {
             getSupportActionBar().hide();
         }
 
-        // AD BANNER
-        BannerView bannerView = findViewById(R.id.hw_banner_view);
-        bannerView.setAdId("testw6vs28auh3");
-        bannerView.setBannerRefresh(60);
-        AdParam adParam = new AdParam.Builder().build();
-        bannerView.loadAd(adParam);
-        bannerView.setAdListener(adListener);
-
+        bannerView = findViewById(R.id.hw_banner_view);
         btnCopy = findViewById(R.id.btnCopy);
         btnOpenInBrowser = findViewById(R.id.btnOpenInBrowser);
         txtResult = findViewById(R.id.txtResult);
@@ -56,6 +50,7 @@ public class ScanResultActivity extends AppCompatActivity {
         txtResult.setText(scanResult);
 
         showButtons(scanResult);
+        setHuaweiBannerAds(bannerView);
 
         btnOpenInBrowser.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,6 +102,15 @@ public class ScanResultActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void setHuaweiBannerAds(BannerView banner) {
+        banner.setAdId("testw6vs28auh3");
+        banner.setBannerRefresh(60);
+        AdParam adParam = new AdParam.Builder().build();
+        banner.loadAd(adParam);
+        banner.setAdListener(adListener);
+    }
+
     private AdListener adListener = new AdListener() {
         @Override
         public void onAdLoaded() {
@@ -133,4 +137,6 @@ public class ScanResultActivity extends AppCompatActivity {
             // Called when an ad is closed.
         }
     };
+
+
 }
