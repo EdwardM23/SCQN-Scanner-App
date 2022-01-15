@@ -18,6 +18,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
     private HistoryAdapter.onItemClickListener itemListener;
 
     public interface onItemClickListener {
+        void onItemBookmark(int position);
         void onItemCopy(int position);
         void onItemDelete(int position);
     }
@@ -29,7 +30,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         public class ViewHolder extends RecyclerView.ViewHolder {
             public TextView scanResult;
             public TextView scanTime;
-            public ImageButton btnCopyLink, btnDelete;
+            public ImageButton btnCopyLink, btnDelete, btnBookmark;
             public ViewHolder(View itemView) {
                 super(itemView);
 
@@ -37,6 +38,17 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
                 scanTime = itemView.findViewById(R.id.txtScanTime);
                 btnCopyLink = itemView.findViewById(R.id.btnCopy);
                 btnDelete = itemView.findViewById(R.id.btnDelete);
+                btnBookmark = itemView.findViewById(R.id.btnBookmark);
+
+                btnBookmark.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        int itemPosition = getAdapterPosition();
+                        if (itemPosition != RecyclerView.NO_POSITION) {
+                            itemListener.onItemBookmark(itemPosition);
+                        }
+                    }
+                });
 
                 btnCopyLink.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -62,9 +74,17 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
                     }
                 });
             }
-            public void setData(String res, String time) {
+            public void setData(String res, String time, boolean isBookmarked) {
                 scanResult.setText(res);
                 scanTime.setText(time);
+
+                // Untuk menentukan suatu item bookmarked/gk
+                if (isBookmarked) {
+                    btnBookmark.setImageResource(R.drawable.btn_bookmark);
+                }
+                else {
+                    btnBookmark.setImageResource(R.drawable.btn_bookmark_border);
+                }
             }
         }
 
@@ -93,7 +113,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         History history = historyList.get(position);
 
         // Set item views based on your views and data model
-        holder.setData(history.getResult(), history.getDateTime());
+        holder.setData(history.getResult(), history.getDateTime(), history.isBookmarked());
     }
 
     // Returns the total count of items in the list

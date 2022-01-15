@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import edward.com.scannerapp.model.Bookmark;
 import edward.com.scannerapp.model.History;
 
 public class HistoryPage extends AppCompatActivity implements HuaweiBannerAds {
@@ -62,6 +63,25 @@ public class HistoryPage extends AppCompatActivity implements HuaweiBannerAds {
         HistoryAdapter adapter = new HistoryAdapter(historyList);
         adapter.setOnItemClickListener(new HistoryAdapter.onItemClickListener() {
             @Override
+            public void onItemBookmark(int position) {
+                History historyObject = historyList.get(position);
+
+                // Jika saat ini udah di bookmark, maka ketika diklik, berarti delete bookmarknya.
+                if (historyObject.isBookmarked()) {
+                    db.deleteBookmarkByHistoryID(historyObject.getId());
+                    historyObject.setBookmarked(false);
+                }
+
+                // Sebaliknya, jika saat ini belum di-bookmark, ketika diklik, akan di-bookmark.
+                else if (!historyObject.isBookmarked()) {
+                    db.addScanBookmark(new Bookmark(historyObject.getResult(), historyObject.getId()));
+                    historyObject.setBookmarked(true);
+                }
+
+                adapter.notifyItemChanged(position);
+            }
+
+            @Override
             public void onItemCopy(int position) {
                 String text = historyList.get(position).getResult();
                 ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
@@ -86,8 +106,7 @@ public class HistoryPage extends AppCompatActivity implements HuaweiBannerAds {
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent home = new Intent(HistoryPage.this, MainActivity.class);
-                startActivity(home);
+                HistoryPage.this.onBackPressed();
             }
         });
 

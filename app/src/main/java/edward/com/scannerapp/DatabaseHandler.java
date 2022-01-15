@@ -52,22 +52,24 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
-    public void addScanHistory(History history){
+    public long addScanHistory(History history){
         SQLiteDatabase db = getWritableDatabase();
 
         ContentValues values = new ContentValues();
         values.put(KEY_SCAN_RESULT, history.getResult());
         values.put(KEY_DATETIME, history.getDateTime());
 
-        db.insert(TABLE_SCAN_HISTORY, null, values);
+        long insertedId = db.insert(TABLE_SCAN_HISTORY, null, values);
         db.close();
+
+        return insertedId;
     }
 
     // get all records
     public ArrayList<History> getAllScanHistory(){
         ArrayList<History> historyList = new ArrayList<>();
         // Select All Query
-        String selectQuery = "SELECT * FROM ScanHistory";
+        String selectQuery = "SELECT a.id, a.scan_result, a.time, b.id FROM ScanHistory a LEFT JOIN ScanBookmark b ON a.id = b.history_id";
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -78,6 +80,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 history.setId(Integer.parseInt(cursor.getString(0)));
                 history.setResult(cursor.getString(1));
                 history.setDateTime(cursor.getString(2));
+
+                // Jika null, berarti tidak ada di table bookmark
+                if (cursor.isNull(3)) {
+                    history.setBookmarked(false);
+                }
+                else {
+                    history.setBookmarked(true);
+                }
 
                 historyList.add(history);
             } while (cursor.moveToNext());
@@ -146,5 +156,20 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
 
         return bookmarkList;
+    }
+
+    public void deleteBookmarkByHistoryID(int history_id){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from " + TABLE_SCAN_BOOKMARK + " where " + KEY_HISTORY_ID + " = " + history_id);
+    }
+
+    public void deleteBookmarkByBookmarkID(int bookmark_id){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from " + TABLE_SCAN_BOOKMARK + " where " + KEY_ID + " = " + bookmark_id);
+    }
+
+    public void clearScanBookmarkTable(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from " + TABLE_SCAN_BOOKMARK);
     }
 }

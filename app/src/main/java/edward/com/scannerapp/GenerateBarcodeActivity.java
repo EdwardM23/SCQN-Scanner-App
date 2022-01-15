@@ -114,8 +114,7 @@ public class GenerateBarcodeActivity extends AppCompatActivity implements Huawei
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent home = new Intent(GenerateBarcodeActivity.this, MainActivity.class);
-                startActivity(home);
+                GenerateBarcodeActivity.this.onBackPressed();
             }
         });
 

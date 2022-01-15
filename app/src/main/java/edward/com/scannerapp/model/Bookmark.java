@@ -18,8 +18,7 @@ public class Bookmark {
         this.dateTime = sdf.format(new Date());
     }
 
-    public Bookmark(){
-
+    public Bookmark() {
     }
 
     public String getResult() {

@@ -13,6 +13,7 @@ public class History {
     private String result;
     private int id_counter = 1;
     private SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
+    private boolean isBookmarked;
 
     public History(String result){
         this.id = id_counter++;
@@ -46,5 +47,13 @@ public class History {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public boolean isBookmarked() {
+        return isBookmarked;
+    }
+
+    public void setBookmarked(boolean bookmarked) {
+        isBookmarked = bookmarked;
     }
 }

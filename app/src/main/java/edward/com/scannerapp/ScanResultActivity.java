@@ -20,13 +20,18 @@ import com.huawei.hms.ads.AdListener;
 import com.huawei.hms.ads.AdParam;
 import com.huawei.hms.ads.banner.BannerView;
 
+import edward.com.scannerapp.model.Bookmark;
+import edward.com.scannerapp.model.History;
+
 public class ScanResultActivity extends AppCompatActivity implements HuaweiBannerAds{
 
-    private ImageButton btnCopy, btnOpenInBrowser, btnBack;
+    private ImageButton btnCopy, btnOpenInBrowser, btnBack,btnBookmark;
     private TextView txtResult;
     private Button btnHistory;
     private ImageView imgScan;
     private BannerView bannerView;
+
+    private DatabaseHandler db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,9 +41,12 @@ public class ScanResultActivity extends AppCompatActivity implements HuaweiBanne
             getSupportActionBar().hide();
         }
 
+        db = new DatabaseHandler(this);
+
         bannerView = findViewById(R.id.hw_banner_view);
         btnCopy = findViewById(R.id.btnCopy);
         btnOpenInBrowser = findViewById(R.id.btnOpenInBrowser);
+        btnBookmark = findViewById(R.id.btnBookmarkResult);
         txtResult = findViewById(R.id.txtResult);
         btnHistory = findViewById(R.id.btnHistory);
         btnBack = findViewById(R.id.btnBack);
@@ -47,6 +55,7 @@ public class ScanResultActivity extends AppCompatActivity implements HuaweiBanne
         imgScan.setImageBitmap(MainActivity.getBitmap_transfer());
 
         String scanResult = getIntent().getStringExtra(MainActivity.SCAN_RESULT);
+        long scanResultId = getIntent().getLongExtra(MainActivity.SCAN_RESULT_ID, -1);
         txtResult.setText(scanResult);
 
         showButtons(scanResult);
@@ -76,6 +85,16 @@ public class ScanResultActivity extends AppCompatActivity implements HuaweiBanne
             }
         });
 
+        btnBookmark.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                btnBookmark.setImageResource(R.drawable.btn_bookmark);
+                db.addScanBookmark(new Bookmark(scanResult, (int) scanResultId));
+                Toast toast = Toast.makeText(getApplicationContext(), "Added to bookmark", Toast.LENGTH_SHORT);
+                toast.show();
+            }
+        });
+
         btnHistory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -87,18 +106,16 @@ public class ScanResultActivity extends AppCompatActivity implements HuaweiBanne
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent home = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(home);
+                ScanResultActivity.this.onBackPressed();
             }
         });
     }
 
     private void showButtons(String scanResult) {
-        if(scanResult.startsWith("http://") || scanResult.startsWith("https://")){
+        btnCopy.setVisibility(View.VISIBLE);
+        btnBookmark.setVisibility(View.VISIBLE);
+        if(scanResult.startsWith("http://") || scanResult.startsWith("https://")) {
             btnOpenInBrowser.setVisibility(View.VISIBLE);
-            btnCopy.setVisibility(View.VISIBLE);
-        } else{
-            btnCopy.setVisibility(View.VISIBLE);
         }
     }
 

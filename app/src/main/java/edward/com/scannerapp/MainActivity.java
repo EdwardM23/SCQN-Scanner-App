@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private final int PERMISSIONS_LENGTH = 2;
     private final int CAMERA_REQUEST_CODE = 2;
     public static final String SCAN_RESULT = "SCAN_RESULT";
+    public static final String SCAN_RESULT_ID = "SCAN_RESULT_ID";
 
     // UI Controls
     private ImageButton flash_button, btnScanFromFile, btnMenu;
@@ -105,10 +106,11 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
                 scanResult[0] = result[0].getOriginalValue();
                 String strScanResult = scanResult[0];
-                addScanHistory(strScanResult);
+                long scanId = addScanHistory(strScanResult);
 
                 Intent scanResultAct = new Intent(MainActivity.this, ScanResultActivity.class);
                 scanResultAct.putExtra(SCAN_RESULT, strScanResult);
+                scanResultAct.putExtra(SCAN_RESULT_ID, scanId);
                 startActivity(scanResultAct);
             }
         });
@@ -256,10 +258,11 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     if (obj[0] != null && !TextUtils.isEmpty(((HmsScan) obj[0]).getOriginalValue())) {
                         setBitmap_transfer(bitmap);
                         String strScanResultFromFile = ((HmsScan) obj[0]).getOriginalValue();
-                        addScanHistory(strScanResultFromFile);
+                        long scanId = addScanHistory(strScanResultFromFile);
 
                         Intent intent = new Intent(this, ScanResultActivity.class);
                         intent.putExtra(SCAN_RESULT, strScanResultFromFile);
+                        intent.putExtra(SCAN_RESULT_ID, scanId);
                         startActivity(intent);
                     }
                 } else {
@@ -272,8 +275,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         }
     }
 
-    private void addScanHistory(String scanResult) {
-        db.addScanHistory(new History(scanResult));
+    private long addScanHistory(String scanResult) {
+        return db.addScanHistory(new History(scanResult));
     }
 
 

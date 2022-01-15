@@ -20,7 +20,6 @@ import com.huawei.hms.ads.banner.BannerView;
 import java.util.ArrayList;
 
 import edward.com.scannerapp.model.Bookmark;
-import edward.com.scannerapp.model.History;
 
 public class BookmarkActivity extends AppCompatActivity implements HuaweiBannerAds{
 
@@ -75,11 +74,9 @@ public class BookmarkActivity extends AppCompatActivity implements HuaweiBannerA
             @Override
             public void onItemDelete(int position) {
                 int id = bookmarkList.get(position).getId();
-                Toast toast = Toast.makeText(getApplicationContext(), "NOT IMPLEMENTED YET", Toast.LENGTH_SHORT);
-                toast.show();
-//                db.deleteHistory(id);
-//                historyList.remove(position);
-//                adapter.notifyItemRemoved(position);
+                db.deleteBookmarkByBookmarkID(id);
+                bookmarkList.remove(position);
+                adapter.notifyItemRemoved(position);
             }
         });
 
@@ -88,20 +85,17 @@ public class BookmarkActivity extends AppCompatActivity implements HuaweiBannerA
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent home = new Intent(BookmarkActivity.this, MainActivity.class);
-                startActivity(home);
+                BookmarkActivity.this.onBackPressed();
             }
         });
 
         btnClearBookmark.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                db.clearScanHistoryTable();
-                Toast toast = Toast.makeText(getApplicationContext(), "NOT IMPLEMENTED YET", Toast.LENGTH_SHORT);
-                toast.show();
-//                int size = historyList.size();
-//                historyList.clear();
-//                adapter.notifyItemRangeRemoved(0, size);
+                db.clearScanBookmarkTable();
+                int size = bookmarkList.size();
+                bookmarkList.clear();
+                adapter.notifyItemRangeRemoved(0, size);
             }
         });
     }
