@@ -138,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                         startActivity(new Intent(getApplicationContext(), GenerateBarcodeActivity.class));
                         break;
                 }
-                DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
+                DrawerLayout drawerLayout = findViewById(R.id.drawer_layout_main);
                 drawerLayout.closeDrawer(GravityCompat.START);
                 return true;
             }
