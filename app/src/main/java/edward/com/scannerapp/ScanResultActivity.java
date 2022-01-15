@@ -1,6 +1,9 @@
 package edward.com.scannerapp;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -9,6 +12,8 @@ import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -16,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.navigation.NavigationView;
 import com.huawei.hms.ads.AdListener;
 import com.huawei.hms.ads.AdParam;
 import com.huawei.hms.ads.banner.BannerView;
@@ -25,7 +31,9 @@ import edward.com.scannerapp.model.History;
 
 public class ScanResultActivity extends AppCompatActivity implements HuaweiBannerAds{
 
-    private ImageButton btnCopy, btnOpenInBrowser, btnBack,btnBookmark;
+    private final int REQUEST_CODE_FILE = 300;
+
+    private ImageButton btnCopy, btnOpenInBrowser, btnMenu,btnBookmark;
     private TextView txtResult;
     private Button btnHistory;
     private ImageView imgScan;
@@ -36,7 +44,7 @@ public class ScanResultActivity extends AppCompatActivity implements HuaweiBanne
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_scan_result);
+        setContentView(R.layout.nav_activity_scan_result);
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
         }
@@ -49,7 +57,7 @@ public class ScanResultActivity extends AppCompatActivity implements HuaweiBanne
         btnBookmark = findViewById(R.id.btnBookmarkResult);
         txtResult = findViewById(R.id.txtResult);
         btnHistory = findViewById(R.id.btnHistory);
-        btnBack = findViewById(R.id.btnBack);
+        btnMenu = findViewById(R.id.btnMenu);
 
         imgScan = findViewById(R.id.imgScan);
         imgScan.setImageBitmap(MainActivity.getBitmap_transfer());
@@ -103,12 +111,43 @@ public class ScanResultActivity extends AppCompatActivity implements HuaweiBanne
             }
         });
 
-        btnBack.setOnClickListener(new View.OnClickListener() {
+        btnMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ScanResultActivity.this.onBackPressed();
+                DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout_scan_result);
+                drawerLayout.openDrawer(GravityCompat.START);
             }
         });
+
+        NavigationView nav = findViewById(R.id.nav_view);
+        nav.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.btn_scanHistory:
+                        startActivity(new Intent(getApplicationContext(), HistoryPage.class).addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
+                        break;
+                    case R.id.btn_generateQRCode:
+                        startActivity(new Intent(getApplicationContext(), GenerateBarcodeActivity.class).addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
+                        break;
+                    case R.id.btn_scanFromFile:
+                        scanFromFile();
+                        break;
+                    case R.id.btn_bookmark:
+                        startActivity(new Intent(getApplicationContext(), BookmarkActivity.class). addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
+                        break;
+                }
+                DrawerLayout drawerLayout = findViewById(R.id.drawer_layout_scan_result);
+                drawerLayout.closeDrawer(GravityCompat.START);
+                return true;
+            }
+        });
+    }
+
+    public void scanFromFile() {
+        Intent pickIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        pickIntent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+        ScanResultActivity.this.startActivityForResult(pickIntent, REQUEST_CODE_FILE);
     }
 
     private void showButtons(String scanResult) {

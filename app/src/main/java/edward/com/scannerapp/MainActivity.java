@@ -130,16 +130,16 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()){
                     case R.id.btn_scanHistory:
-                        startActivity(new Intent(getApplicationContext(), HistoryPage.class));
+                        startActivity(new Intent(getApplicationContext(), HistoryPage.class).addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
                         break;
                     case R.id.btn_generateQRCode:
-                        startActivity(new Intent(getApplicationContext(), GenerateBarcodeActivity.class));
+                        startActivity(new Intent(getApplicationContext(), GenerateBarcodeActivity.class).addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
                         break;
                     case R.id.btn_scanFromFile:
                         scanFromFile();
                         break;
                     case R.id.btn_bookmark:
-                        startActivity(new Intent(getApplicationContext(), BookmarkActivity.class));
+                        startActivity(new Intent(getApplicationContext(), BookmarkActivity.class). addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
                         break;
                 }
                 DrawerLayout drawerLayout = findViewById(R.id.drawer_layout_main);

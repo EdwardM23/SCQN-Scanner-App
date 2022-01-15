@@ -8,7 +8,9 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -18,11 +20,15 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.google.android.material.navigation.NavigationView;
 import com.huawei.hms.ads.AdParam;
 import com.huawei.hms.ads.HwAds;
 import com.huawei.hms.ads.banner.BannerView;
@@ -37,6 +43,7 @@ import java.util.Objects;
 
 public class GenerateBarcodeActivity extends AppCompatActivity implements HuaweiBannerAds {
 
+    private final int REQUEST_CODE_FILE = 300;
     private static final String TAG = "GenerateBarcodeActivity" ;
     private static final int[] BARCODE_TYPES = {
             HmsScan.QRCODE_SCAN_TYPE, HmsScan.DATAMATRIX_SCAN_TYPE,
@@ -56,7 +63,7 @@ public class GenerateBarcodeActivity extends AppCompatActivity implements Huawei
     private Spinner ddlForeColor;
     private Spinner ddlBgColor;
     private Button btnGenerateBarcode;
-    private ImageButton btnSaveBarcode, btnBack;
+    private ImageButton btnSaveBarcode, btnMenu;
     private ImageView imgBarcodeResult;
     private BannerView bannerAds;
 
@@ -90,7 +97,7 @@ public class GenerateBarcodeActivity extends AppCompatActivity implements Huawei
 //            }
 //        }
 
-        setContentView(R.layout.activity_generate);
+        setContentView(R.layout.nav_activity_generate_qr);
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
         }
@@ -102,19 +109,50 @@ public class GenerateBarcodeActivity extends AppCompatActivity implements Huawei
         imgBarcodeResult = findViewById(R.id.imgBarcodeResult);
         btnGenerateBarcode = findViewById(R.id.btnGenerateBarcode);
         btnSaveBarcode = findViewById(R.id.btnSaveBarcode);
-        btnBack = findViewById(R.id.btnBack);
+        btnMenu = findViewById(R.id.btnMenu);
         bannerAds = findViewById(R.id.huawei_banner);
 
         //Set Huawei Ads Banner
         setHuaweiBannerAds(bannerAds);
         setupListeners();
+
+        NavigationView nav = findViewById(R.id.nav_view);
+        nav.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.btn_scanHistory:
+                        startActivity(new Intent(getApplicationContext(), HistoryPage.class).addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
+                        break;
+                    case R.id.btn_generateQRCode:
+                        startActivity(new Intent(getApplicationContext(), GenerateBarcodeActivity.class).addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
+                        break;
+                    case R.id.btn_scanFromFile:
+                        scanFromFile();
+                        break;
+                    case R.id.btn_bookmark:
+                        startActivity(new Intent(getApplicationContext(), BookmarkActivity.class). addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
+                        break;
+                }
+                DrawerLayout drawerLayout = findViewById(R.id.drawer_layout_generate);
+                drawerLayout.closeDrawer(GravityCompat.START);
+                return true;
+            }
+        });
+    }
+
+    public void scanFromFile() {
+        Intent pickIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        pickIntent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+        GenerateBarcodeActivity.this.startActivityForResult(pickIntent, REQUEST_CODE_FILE);
     }
 
     protected void setupListeners() {
-        btnBack.setOnClickListener(new View.OnClickListener() {
+        btnMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                GenerateBarcodeActivity.this.onBackPressed();
+                DrawerLayout drawerLayout = findViewById(R.id.drawer_layout_generate);
+                drawerLayout.openDrawer(GravityCompat.START);
             }
         });
 
