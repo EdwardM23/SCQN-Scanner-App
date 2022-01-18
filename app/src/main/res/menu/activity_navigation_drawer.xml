@@ -16,11 +16,14 @@
             android:id="@+id/btn_generateQRCode"
             android:icon="@drawable/btn_create"
             android:title="Generate QR Code" />
-
         <item
             android:id="@+id/btn_scanFromFile"
             android:icon="@drawable/ic_menu_gallery"
-            android:title="Scan from File" />
+            android:title="Scan QR from File" />
+        <item
+            android:id="@+id/btn_scanText"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="Scan Text from File" />
 
     </group>
 </menu>

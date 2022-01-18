@@ -21,11 +21,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
+import com.huawei.hmf.tasks.OnFailureListener;
+import com.huawei.hmf.tasks.OnSuccessListener;
+import com.huawei.hmf.tasks.Task;
 import com.huawei.hms.hmsscankit.OnResultCallback;
 import com.huawei.hms.hmsscankit.RemoteView;
 import com.huawei.hms.hmsscankit.ScanUtil;
 import com.huawei.hms.ml.scan.HmsScan;
 import com.huawei.hms.ml.scan.HmsScanAnalyzerOptions;
+import com.huawei.hms.mlsdk.MLAnalyzerFactory;
+import com.huawei.hms.mlsdk.common.MLFrame;
+import com.huawei.hms.mlsdk.text.MLLocalTextSetting;
+import com.huawei.hms.mlsdk.text.MLText;
+import com.huawei.hms.mlsdk.text.MLTextAnalyzer;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -140,6 +148,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                         break;
                     case R.id.btn_bookmark:
                         startActivity(new Intent(getApplicationContext(), BookmarkActivity.class). addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
+                        break;
+                    case R.id.btn_scanText:
+                        startActivity(new Intent(getApplicationContext(), ScanTextActivity.class). addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
                         break;
                 }
                 DrawerLayout drawerLayout = findViewById(R.id.drawer_layout_main);

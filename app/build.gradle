@@ -55,4 +55,9 @@ dependencies {
     })
     androidTestImplementation 'junit:junit:4.12'
     implementation 'com.huawei.hms:ads-identifier:3.4.34.301'
+
+    implementation 'com.huawei.hms:ml-computer-vision-ocr:3.3.0.301'
+    implementation 'com.huawei.hms:ml-computer-vision-ocr-latin-model:3.3.0.301'
+    implementation 'com.huawei.hms:ml-computer-vision-ocr-jk-model:3.3.0.301'
+    implementation 'com.huawei.hms:ml-computer-vision-ocr-cn-model:3.3.0.301'
 }
